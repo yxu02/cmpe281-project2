@@ -1,4 +1,0 @@
-<?php
-putenv("AWS_ACCESS_KEY_ID=AKIAILY4YDTL73I3MCXQ");
-putenv("AWS_SECRET_ACCESS_KEY=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");
-?>
