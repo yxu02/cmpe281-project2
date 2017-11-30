@@ -3,6 +3,7 @@
 --drop table users281;
 --drop table user_foods;
 --drop table nutrition;
+--drop table body_data;
 
 CREATE TABLE `users281` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -57,6 +58,14 @@ CREATE TABLE `measurements` (
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8;
 
+CREATE TABLE `body_data` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `amazon_user_id` varchar(256) DEFAULT NULL,
+  `weight` decimal(4,2) DEFAULT NULL,
+  `p_body_fat` int(11) DEFAULT NULL,
+  `p_body_water` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8;
 
 --Sample Data
 INSERT INTO users281(name, email,age,gender,password, token, token_expire_at, created_at) 
