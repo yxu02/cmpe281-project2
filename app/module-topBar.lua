@@ -64,6 +64,17 @@ nb.new = function(options)
     --     btLeft.isVisible = false
     -- end
 
+    local btRightImageFile = btLeftImageFile
+    local btRightImageWidth = btLeftImageWdith
+    local btRightImageHeight = btLeftImageHeight
+    local btRightImageRotation = 180
+    if useCloseRightButton then
+        btRightImageFile = "images/top-bar/ic-close.png"
+        btRightImageWidth = 20
+        btRightImageHeight = 21
+        btRightImageRotation = 0
+    end
+
     local btRight = rbW.newButton{
         width = btLeftW,
         height = background.contentHeight,
@@ -71,13 +82,13 @@ nb.new = function(options)
         y = background.y,
         --x = 0,
         right = _G.SCREEN_W,
-        imageFile = btLeftImageFile,
-        imageWidth = btLeftImageWidth,
-        imageHeight = btLeftImageHeight,
+        imageFile = btRightImageFile,
+        imageWidth = btRightImageWidth,
+        imageHeight = btRightImageHeight,
         imagePadding = {left=0},
         imageColor = {1,1,1,1},
         imageOverColor = {1,1,1,.3},
-        imageRotation = 180,
+        imageRotation = btRightImageRotation,
         onRelease = function(e)
             if isButtonsDisabled then return end
             if rightButtonHandler then
