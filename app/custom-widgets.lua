@@ -131,24 +131,35 @@ cw.newBlueRoundedButton = function(options)
     local top = options.top
     local y = options.y
 
+    local width = options.width
+
     local id = options.id
     local text = options.text
     local onRelease = options.onRelease
 
+    local fontSize = 16
 
 
     local group = display.newGroup()
     group.id = id
+    group.anchorChildren = true
 
-    local leftImage = display.newImageRect(group, "images/buttons/bt-blue-left.png", 34, 30)
+    local leftWidth = 34
+    local rightWidth = 15
+
+    local leftImage = display.newImageRect(group, "images/buttons/bt-blue-left.png", leftWidth, 30)
     leftImage.x = leftImage.contentWidth*.5
     leftImage.y = leftImage.contentHeight*.5
 
-    local lb = display.newText{parent=group, text=text, x=0, y=0, font=_G.FONTS.light, fontSize=18 }
+    local lb = display.newText{parent=group, text=text, x=0, y=0, font=_G.FONTS.light, fontSize=fontSize }
     lb:setTextColor(unpack(_G.COLORS.white))
     group.label = lb
 
-    local midImage = display.newImageRect(group, "images/buttons/bt-blue-mid.png", lb.contentWidth, leftImage.contentHeight)
+    local midWidth = lb.contentWidth
+    if width then
+        midWidth = math.max(width - leftWidth - rightWidth, midWidth)
+    end
+    local midImage = display.newImageRect(group, "images/buttons/bt-blue-mid.png", midWidth, leftImage.contentHeight)
     midImage.x = leftImage.x + leftImage.contentWidth*.5 + midImage.contentWidth*.5
     midImage.y = leftImage.y
 
@@ -156,7 +167,7 @@ cw.newBlueRoundedButton = function(options)
     lb.y = midImage.y
     lb:toFront()
 
-    local rightImage = display.newImageRect(group, "images/buttons/bt-blue-right.png", 15, 30)
+    local rightImage = display.newImageRect(group, "images/buttons/bt-blue-right.png", rightWidth, 30)
     rightImage.x = midImage.x + midImage.contentWidth*.5 + rightImage.contentWidth*.5
     rightImage.y = midImage.y
 
@@ -290,8 +301,10 @@ end
 cw.newTextField = function(options)
     local fullW = 250
     local halfW = 122
+    local halHalffW = 60
 
     local width = options.isHalfWidth and halfW or fullW
+    width = options.isHalfHalfWidth and halHalffW or fullW
 
     local input = rbW.newTextField{
         x = options.x,
@@ -312,6 +325,8 @@ cw.newTextField = function(options)
         formatType = options.formatType,
         inputType = options.inputType,
         autocapitalizationType = options.autocapitalizationType,
+
+        onRelease = options.onRelease,
 
         align = "left",
 
