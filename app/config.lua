@@ -5,7 +5,7 @@ application = {
     {
         width = 320,
         height = 480,
-        scale = "adaptative",
+        scale = "adaptive",
         fps = 30,
         -- imageSuffix = {
         --     ["@2x"] = 1.5,
