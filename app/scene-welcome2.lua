@@ -65,11 +65,11 @@ function scene:create( event )
 
 
 
-
+    local btNextTop = math.max(bottom, SCREEN_H*0.8)
     local btNext = CW.newGreenButton{
         parent = sceneGroup,
         x = CENTER_X,
-        top = bottom,
+        top = btNextTop,
         label = "next",
         onRelease = function()
             composer.gotoScene( "scene-welcome3", {time=400, effect="slideLeft"})

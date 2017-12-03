@@ -1,5 +1,5 @@
 local rb = {}
--- textfield with a line below it. -- v19 (added align to fake label; forcing to have backgroundColor when using useFakeLabel; set useFakeLabel to true as default, added useFakeLabel options; fixed autocapitalization; added useTextBox; added card formattype;  fixed 'words' autocapitalization; added formatType 'date'; fixed isDeleting with formatType; added bottomLineColor, bottomLineWidth; added parentGroupToMove, updated setAlpha, added hasBackground, added background,  added more format types, added left/right label; added autocapitalizationType;  added nextInput, isSecure e align; added brazilian phone validation)
+-- textfield with a line below it. -- v20 (added onRelease; added align to fake label; forcing to have backgroundColor when using useFakeLabel; set useFakeLabel to true as default, added useFakeLabel options; fixed autocapitalization; added useTextBox; added card formattype;  fixed 'words' autocapitalization; added formatType 'date'; fixed isDeleting with formatType; added bottomLineColor, bottomLineWidth; added parentGroupToMove, updated setAlpha, added hasBackground, added background,  added more format types, added left/right label; added autocapitalizationType;  added nextInput, isSecure e align; added brazilian phone validation)
 
 ---------------------------------------------------------------------------------
 -- extension functions for COMPOSER
@@ -52,7 +52,7 @@ rb.new = function(options)
     local w = options.w or options.width or 170
     local h = options.h or options.height or 30
 
-    local listener = options.listener
+
     local placeholder = options.placeholder
     local placeholderColor = options.placeholderColor or {1,1,1}
     local text = options.text
@@ -70,6 +70,10 @@ rb.new = function(options)
 
     local autocorrectionType  = options.autocorrectionType or options.autoCorrectionType or "UITextAutocorrectionTypeDefault"  -- values are:  "UITextAutocorrectionTypeDefault or "UITextAutocorrectionTypeYes", "UITextAutocorrectionTypeNo"
 
+
+    local listener = options.listener
+    local onRelease = options.onRelease -- function that is called after the user stopped typing for onReleaseTime seconds
+    local onReleaseTime = options.onReleaseTime or 1.2 -- time that widget will wait before calling onRelease. If any key is typed during the wait time, the timer resets.
 
     local parent = options.parent
     local id = options.id
@@ -433,6 +437,20 @@ rb.new = function(options)
         end
 
         if listener then listener(event) end
+
+        if onRelease then
+            if group._onReleaseTimerId then
+                timer.cancel( group._onReleaseTimerId )
+                group._onReleaseTimerId = nil
+            end
+            group._onReleaseTimerId = timer.performWithDelay(onReleaseTime*1000, function()
+                if onRelease then
+                    onRelease(event, group)
+                end
+            end)
+        end
+
+
     end
     local inputW = w - lbLeftW - lbRightW
     if useTextBox then

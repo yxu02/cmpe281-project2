@@ -40,28 +40,25 @@ function scene:create( event )
     imgHealth.yScale = 0.8
 
 
-    transition.to( imgHealth, {xScale = 1, yScale = 1, time = 1000, transition=easing.continuousLoop, iterations=99})
+    sceneGroup.heartTransitionId = transition.to( imgHealth, {xScale = 1, yScale = 1, delay = 1000, time = 1300, transition=easing.continuousLoop, iterations=99})
 
 
+    local btNextTop = math.max(imgHealth.y + imgHealth.contentHeight, SCREEN_H*0.8)
     local btNextHandler = function()
-
         composer.gotoScene( "scene-welcome2", {time=400, effect="slideLeft"})
-
     end
 
     local btNext = CW.newGreenButton{
         parent = sceneGroup,
         x = CENTER_X,
-        top = imgHealth.y + imgHealth.contentHeight,
+        top = btNextTop,
         label = "next",
         onRelease = btNextHandler
     }
 
 
      local btLoginHandler = function()
-
         composer.gotoScene( "scene-login", {time=400, effect="slideLeft"})
-
     end
 
     local btLogin = CW.newTransparentButton{
@@ -111,6 +108,10 @@ function scene:hide( event )
         -- Insert code here to "pause" the scene.
         -- Example: stop timers, stop animation, stop audio, etc.
 
+        if sceneGroup.heartTransitionId then
+            transition.cancel(sceneGroup.heartTransitionId)
+            sceneGroup.heartTransitionId = nil
+        end
 
     elseif ( phase == "did" ) then
         -- Called immediately after scene goes off screen.

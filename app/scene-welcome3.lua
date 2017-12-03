@@ -23,48 +23,16 @@ function scene:create( event )
     background.fill = _G.COLORS.darkBlue
 
 
-    local lbTitle = display.newText{parent=sceneGroup, text="Let’s customize this app for you...", x=_G.CENTER_X, y=SCREEN_H*0.06, font=_G.FONTS.regular, fontSize=20 }
+    local spaceBetweenSections =10*(SCREEN_H/480)
+
+
+    local lbTitle = display.newText{parent=sceneGroup, text="Let’s customize this app for you...", x=_G.CENTER_X, y=SCREEN_H*0.1, font=_G.FONTS.regular, fontSize=20 }
     lbTitle:setTextColor(unpack(_G.COLORS.white))
     lbTitle.anchorY = 0
     local bottom = lbTitle.y + lbTitle.contentHeight
 
 
-    local lbUnits = display.newText{parent=sceneGroup, text="Units:", x=_G.CENTER_X, y=bottom + 10, font=_G.FONTS.regular, fontSize=20 }
-    lbUnits:setTextColor(unpack(_G.COLORS.white))
-    lbUnits.anchorY = 0
-    bottom = lbUnits.y + lbUnits.contentHeight
-
-
-
-
-    local switchUnits = _G.RBW.newSwitch{
-        parent = sceneGroup,
-        x = lbUnits.x,
-        y = lbUnits.y + lbUnits.contentHeight*.5 + 25 + 10,
-        width = 60,
-        height = 30,
-        id = id,
-        initialValue = isSwitchOn,
-        --right = _G.SCREEN_W - math.min(40 * _G.GROW_WITH_SCREEN,70),
-        --y = label.y,
-        onChange = onSwitchChange,
-        disabledAlpha = 0.5,
-        --backgroundOnFilename = "images/widgets/switch_bkg_yellow.png",
-        --backgroundOffFilename = "images/widgets/switch_bkg_yellow.png"
-    }
-    bottom = switchUnits.y + switchUnits.contentHeight
-
-    local lbSwitchLeft = display.newText{parent=sceneGroup, text="Imperial\n(lb, in)", x=switchUnits.x - switchUnits.contentWidth*.5 - 10, y=switchUnits.y, font=_G.FONTS.light, fontSize=16 }
-    lbSwitchLeft:setTextColor(unpack(_G.COLORS.white))
-    lbSwitchLeft.anchorX = 1
-
-    local lbSwitchRight = display.newText{parent=sceneGroup, text="Metric\n(kg, cm)", x=switchUnits.x + switchUnits.contentWidth*.5 + 10, y=switchUnits.y, font=_G.FONTS.light, fontSize=16 }
-    lbSwitchRight:setTextColor(unpack(_G.COLORS.white))
-    lbSwitchRight.anchorX = 0
-
-
-
-    local lbCurrentWeight = display.newText{parent=sceneGroup, text="Current Weight:", x=_G.CENTER_X, y=bottom + 4, font=_G.FONTS.regular, fontSize=20 }
+    local lbCurrentWeight = display.newText{parent=sceneGroup, text="Current Weight:", x=_G.CENTER_X, y=bottom + spaceBetweenSections, font=_G.FONTS.regular, fontSize=20 }
     lbCurrentWeight:setTextColor(unpack(_G.COLORS.white))
     lbCurrentWeight.anchorY = 0
     bottom = lbCurrentWeight.y + lbCurrentWeight.contentHeight
@@ -77,7 +45,7 @@ function scene:create( event )
         dataWeightImperial[#dataWeightImperial+1] = {name=i}
     end
 
-    local sliderButtonWeight = require("module-sliderButton").new({
+    local sliderButtonWeight = _G.RBW.newSliderButton({
         top = bottom + 4,
         height = 40,
         buttons = dataWeightImperial,  --  [ {Name=, Id=, Services=},{Name=, Id=, Services=},... ]
@@ -93,7 +61,7 @@ function scene:create( event )
 
 
 
-    local lbAge = display.newText{parent=sceneGroup, text="Age:", x=_G.CENTER_X, y=bottom + 10, font=_G.FONTS.regular, fontSize=20 }
+    local lbAge = display.newText{parent=sceneGroup, text="Age:", x=_G.CENTER_X, y=bottom + spaceBetweenSections, font=_G.FONTS.regular, fontSize=20 }
     lbAge:setTextColor(unpack(_G.COLORS.white))
     lbAge.anchorY = 0
     bottom = lbAge.y + lbAge.contentHeight
@@ -102,7 +70,7 @@ function scene:create( event )
     for i=18,100 do
         dataAge[#dataAge+1] = {Id=1, Name=i}
     end
-    local sliderButtonAge = require("module-sliderButton").new({
+    local sliderButtonAge = _G.RBW.newSliderButton({
         top = bottom + 4,
         height = 40,
         buttons = dataAge,  --  [ {Name=, Id=, Services=},{Name=, Id=, Services=},... ]
@@ -116,7 +84,7 @@ function scene:create( event )
     bottom = sliderButtonAge.y + sliderButtonAge.contentHeight
 
 
-    local lbGender = display.newText{parent=sceneGroup, text="Gender:", x=_G.CENTER_X, y=bottom + 10, font=_G.FONTS.regular, fontSize=20 }
+    local lbGender = display.newText{parent=sceneGroup, text="Gender:", x=_G.CENTER_X, y=bottom + spaceBetweenSections, font=_G.FONTS.regular, fontSize=20 }
     lbGender:setTextColor(unpack(_G.COLORS.white))
     lbGender.anchorY = 0
     bottom = lbGender.y + lbGender.contentHeight
@@ -132,7 +100,7 @@ function scene:create( event )
         width = 60,
         height = 30,
         id = id,
-        initialValue = isSwitchOn,
+        initialValue = false,
         --right = _G.SCREEN_W - math.min(40 * _G.GROW_WITH_SCREEN,70),
         --y = label.y,
         onChange = onSwitchChange,
@@ -142,24 +110,30 @@ function scene:create( event )
     }
     bottom = switchGender.y + switchGender.contentHeight
 
-    local lbSwitchGenderLeft = display.newText{parent=sceneGroup, text="Male", x=switchGender.x - switchGender.contentWidth*.5 - 10, y=switchGender.y, font=_G.FONTS.light, fontSize=16 }
+    local lbSwitchGenderLeft = display.newText{parent=sceneGroup, text="Female", x=switchGender.x - switchGender.contentWidth*.5 - 10, y=switchGender.y, font=_G.FONTS.light, fontSize=16 }
     lbSwitchGenderLeft:setTextColor(unpack(_G.COLORS.white))
     lbSwitchGenderLeft.anchorX = 1
 
-    local lbSwitchGenderRight = display.newText{parent=sceneGroup, text="Female", x=switchGender.x + switchGender.contentWidth*.5 + 10, y=switchGender.y, font=_G.FONTS.light, fontSize=16 }
+    local lbSwitchGenderRight = display.newText{parent=sceneGroup, text="Male", x=switchGender.x + switchGender.contentWidth*.5 + 10, y=switchGender.y, font=_G.FONTS.light, fontSize=16 }
     lbSwitchGenderRight:setTextColor(unpack(_G.COLORS.white))
     lbSwitchGenderRight.anchorX = 0
 
 
 
-
+    local btNextTop = math.max(bottom + 10, SCREEN_H*0.8)
     local btNext = CW.newGreenButton{
         parent = sceneGroup,
         x = CENTER_X,
-        top = bottom + 10,
+        top = btNextTop,
         label = "next",
         onRelease = function()
-            composer.gotoScene( "scene-welcome2", {time=400, effect="slideLeft"})
+            local age = sliderButtonAge:getSelected()
+            local gender = switchGender.currentStatus
+            local weight = sliderButtonWeight:getSelected()
+            print("age=", age)
+            print("gender=", gender)
+
+            composer.gotoScene( "scene-welcome4-register", {time=400, effect="slideLeft", params={age=age, gender=gender, weight=weight}})
         end
     }
 

@@ -27,7 +27,8 @@ settings = {
 		plist = {
 
             CoronaWindowMovesWhenKeyboardAppears=true,
-            NSCameraUsageDescription = "This app uses Camera to scan QR codes",
+            NSCameraUsageDescription = "This app uses Camera to take photos of foods",
+            NSPhotoLibraryUsageDescription = "This app would like to access the photo library.",
 			UIStatusBarHidden = true,
 			UIPrerenderedIcon = true, -- set to false for "shine" overlay
             UIBackgroundModes = {"remote-notification"},
@@ -120,7 +121,7 @@ settings = {
         usesPermissions =
         {
             "android.permission.INTERNET",
-            --"android.permission.CAMERA",
+            "android.permission.CAMERA",
 
             --"com.android.vending.CHECK_LICENSE",
             "android.permission.WRITE_EXTERNAL_STORAGE",  -- required for saving the photo to the Album

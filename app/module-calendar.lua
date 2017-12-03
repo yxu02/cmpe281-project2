@@ -18,6 +18,7 @@ local getDateTableFromDateString = function(dateString)
 
 	return dateTable
 end
+mCalendar.getDateTableFromDateString = getDateTableFromDateString
 
 
 local getDateStringFromDateTable= function(dateTable)
@@ -27,9 +28,21 @@ local getDateStringFromDateTable= function(dateTable)
 	return year .. "-" .. month .. "-" .. day
 end
 
+
+mCalendar.getMonthDayFromDateString = function(dateString)
+	local dateTable = getDateTableFromDateString(dateString)
+	return dateTable.month .. "-" .. dateTable.day
+end
+
+
 mCalendar.getTodayDateString = function()
 	local todayTable = os.date("*t")
 	return getDateStringFromDateTable(todayTable)
+end
+
+mCalendar.getTodayDateTable = function()
+	local todayTable = os.date("*t")
+	return todayTable
 end
 
 

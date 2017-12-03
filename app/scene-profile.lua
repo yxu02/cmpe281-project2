@@ -13,27 +13,55 @@ function scene:create( event )
     -- top bar
 
     local topBar = require("module-topBar").new{
-        title="[12 Nov 17]",
+        title="Customize your app",
         parent=sceneGroup,
         isHidden=false
     }
-    local bottom = topBar.contentBounds.yMax
+
+    topBar.hideRightButton()
+    topBar.hideLeftButton()
+
 
     local sceneTop = topBar.contentBounds.yMax
     local cw = require("custom-widgets")
 
     local tabBar = require("module-tabBar").tabBar
 
+    local bottom = topBar.contentBounds.yMax
 
 
-    bottom = SCREEN_H*.5
+    local lbName = display.newText{parent=sceneGroup, text=_G.USER.name or "[Full name]", x=_G.CENTER_X, y=bottom + 20, font=_G.FONTS.regular, fontSize=24 }
+    lbName:setTextColor(unpack(_G.COLORS.black))
+    lbName.anchorY = 0
+    bottom = lbName.y + lbName.contentHeight
+
+
+    local groupPref = display.newGroup()
+    sceneGroup:insert(groupPref)
+    groupPref.y = bottom + 20
+
+    local groupPreferencesHeader = FRAMES.newSection{parent=groupPref, top = 0, labelLeft="Preferences", isHeader=true}
+    bottom = groupPreferencesHeader.y + groupPreferencesHeader.contentHeight
+
+
+    local groupUnits = FRAMES.newSection{parent=groupPref, top = nil, labelLeft="Units", labelRight="Lbs / inch", labelFontRight=_G.FONTS.light}
+
+    local groupLanguage = FRAMES.newSection{parent=groupPref, top = nil, labelLeft="Language", labelRight="English", labelFontRight=_G.FONTS.light}
+    bottom = groupPref.y + groupPref.contentHeight
+
+    local groupAccount = display.newGroup()
+    sceneGroup:insert(groupAccount)
+    groupAccount.y = bottom
+
+    local groupAccountHeader = FRAMES.newSection{parent=groupAccount, top = 0, labelLeft="Account", isHeader=true}
+    bottom = groupAccountHeader.y + groupAccountHeader.contentHeight
 
     local btLogout = CW.newRedButton{
-        parent = sceneGroup,
+        parent = groupAccount,
         x = CENTER_X,
         top = bottom + 10,
         label = "Logout",
-        onRelease = btRegisterHandler
+        onRelease = _G.USER.logout
     }
 
 

@@ -1,15 +1,31 @@
 
-local s = {}
+-- Slider button
+-- v1
 
-local function new(sliderOptions)
 
+---------------------------
+-- dependencies:
+--
+-- none
+--
+--
+--
+---------------------------
 
-    local height = sliderOptions.height or options.h
-    local buttons = sliderOptions.buttons
-    local onSelect = sliderOptions.onSelect
-    local initialIndex = sliderOptions.initialIndex or 1
+local rb = {}
+
+rb.new = function(options)
+print("options=", options)
+
+    local height = options.height or options.h
+    local width = options.width or options.w or display.contentWidth
+    local buttons = options.buttons
+    local onSelect = options.onSelect
+    local initialIndex = options.initialIndex or 1
 
     local group = display.newGroup()
+
+    group._selectedButton = nil
 
     --slide selector
 
@@ -63,10 +79,6 @@ local function new(sliderOptions)
 
 
 
-
-
-
-
     local sv
 
 
@@ -92,7 +104,7 @@ local function new(sliderOptions)
 
 
     local function findClosestButtonToCenter()
-        return findClosestButtonToPositionX(display.contentCenterX)
+        return findClosestButtonToPositionX(width*.5)
     end
 
 
@@ -103,11 +115,10 @@ local function new(sliderOptions)
     local selectButton = function (buttonObj, disableAnimation)
 
         local btCenterX = buttonObj.background:localToContent(0,0)
-        local deltaX = display.contentCenterX - btCenterX
+        local deltaX = width*.5 - btCenterX
 
 
         local bt1LeftPos = groupButtons[1]:localToContent(0,0)
-
 
         local duration = 800
 
@@ -124,6 +135,8 @@ local function new(sliderOptions)
                 groupButtons[i].title:setFillColor(unpack(colorNotSelected))
             end
             buttonObj.title:setFillColor(unpack(colorSelected))
+
+            group._selectedButton = buttonObj
 
             if onSelect and disableAnimation ~= true then
                 onSelect({target=buttonObj._target})
@@ -149,8 +162,8 @@ local function new(sliderOptions)
         elseif ( phase == "ended" ) then
         --elseif ( phase == "stopped" ) then
             --print(phase)
-            print(phase, require("json").encode(event))
-            print(" ")
+            --print(phase, require("json").encode(event))
+            --print(" ")
             if math.abs(event.x - event.xStart) <= 5 then -- user did a tap (not scrolled) on a specific button
                 ----print("user tapped")
                 local destButton  = findClosestButtonToPositionX(event.x)
@@ -165,12 +178,12 @@ local function new(sliderOptions)
             ----print( "Scroll view was released" )
 
         elseif ( phase == "stopped" ) then
-            print(phase, require("json").encode(event))
-            print(" ")
-            print("- - ")
+            -- print(phase, require("json").encode(event))
+            -- print(" ")
+            -- print("- - ")
 
-            print("getPos=", event.target:getContentPosition())
-            print("- - ")
+            -- print("getPos=", event.target:getContentPosition())
+            -- print("- - ")
                 local destButton  = findClosestButtonToCenter()
                 selectButton(destButton)
         end
@@ -188,7 +201,7 @@ local function new(sliderOptions)
     end
 
     -- creates the background
-    local scrollViewBackground = display.newRect(0,0,display.contentWidth,height)
+    local scrollViewBackground = display.newRect(0, 0, width, height)
     scrollViewBackground.x, scrollViewBackground.y = display.contentCenterX, scrollViewBackground.contentHeight*0.5
     scrollViewBackground:setFillColor(unpack(_G.COLORS.brown))
     group:insert(scrollViewBackground)
@@ -207,7 +220,7 @@ local function new(sliderOptions)
     local scrollView = require("widget").newScrollView{
         x = scrollViewBackground.x,
         y = scrollViewBackground.y,
-        width = display.contentWidth,
+        width = width,
         height = height,
         listener = scrollListener,
         --backgroundColor = {228/255,217/255,184/255},
@@ -225,8 +238,8 @@ local function new(sliderOptions)
     group.scrollView = scrollView
 
     -- sets the position of the entire group
-    group.x = sliderOptions.left or 0
-    group.y = sliderOptions.top
+    group.x = options.left or 0
+    group.y = options.top
 
 
     -- selects the first button
@@ -244,14 +257,15 @@ local function new(sliderOptions)
 
     end
 
+
+    function group:getSelected()
+        return group._selectedButton.title.text, group._selectedButton
+    end
+
     return group
 
 end
 
 
-s.new = new
-
-
-
-return s
+return rb
 

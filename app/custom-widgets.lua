@@ -304,7 +304,10 @@ cw.newTextField = function(options)
     local halHalffW = 60
 
     local width = options.isHalfWidth and halfW or fullW
-    width = options.isHalfHalfWidth and halHalffW or fullW
+    width = options.isHalfHalfWidth and halHalffW or width
+    if options.width then
+        width = options.width
+    end
 
     local input = rbW.newTextField{
         x = options.x,

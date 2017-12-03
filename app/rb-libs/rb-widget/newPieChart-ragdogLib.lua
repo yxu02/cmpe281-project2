@@ -9,7 +9,7 @@
 ---Made by Ragdog Studios SRL in 2013 http://www.ragdogstudios.com
 -- source: http://ragdogstudios.com/2014/02/07/dynamic-pie-charts-with-corona-sdk-graphics-2-0/
 --
--- RB: small changes due to file rename
+-- RB: small changes due to file rename and fixes to work with adaptive model/iPhone 6 plus Corona Simulator (that has display.contentScaleX = 0.5)
 ------------------------------------------------------------------------
 
 local ragdogLib = {};
@@ -35,6 +35,7 @@ ragdogLib.applyMaskFromPolygon = function(object, polygon, maskName)
   while (rectHeight < polygon.contentHeight) do
     rectHeight = rectHeight*2;
   end
+
   local blackRect = display.newRect(maskGroup, 0, 0, rectWidth, rectHeight);
   blackRect:setFillColor(0, 0, 0);
 
@@ -43,8 +44,15 @@ ragdogLib.applyMaskFromPolygon = function(object, polygon, maskName)
   polygon:setFillColor(1, 1, 1, 1);
 
   maskGroup.x, maskGroup.y = display.contentCenterX, display.contentCenterY;
+  -- print("maskGroup.contentWidth=", maskGroup.contentWidth, blackRect.contentWidth)
+  -- print(display.contentScaleX, display.contentScaleY)
+  -- print(maskGroup.contentWidth/display.contentScaleY)
 
-  display.save(maskGroup, maskName or "mask.jpg");
+  --display.save(maskGroup, maskName or "mask.jpg");
+  maskGroup:scale(display.contentScaleX*2, display.contentScaleY*2)
+  display.save(maskGroup, {filename= maskName or "mask.jpg", baseDir=system.DocumentsDirectory, captureOffscreenArea=true, jpegQuality=1});
+
+  maskGroup:removeSelf();
 
   local mask = graphics.newMask(maskName or "mask.jpg", system.DocumentsDirectory);
   object:setMask(mask);
@@ -53,7 +61,7 @@ ragdogLib.applyMaskFromPolygon = function(object, polygon, maskName)
   object.maskScaleX = contentWidth/pixelWidth;
   object.maskScaleY = object.maskScaleX;
 
-  maskGroup:removeSelf();
+
 end
 
 ragdogLib.createPieChart = function(data)

@@ -1,5 +1,18 @@
 local aux = {}
+function comma_value(amount) -- source: http://lua-users.org/wiki/FormattingNumbers
+  local formatted = amount
+  while true do
+    formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+    if (k==0) then
+      break
+    end
+  end
+  return formatted
+end
 
+aux.formatDecimal = function(number)
+    return comma_value(number)
+end
 
 
 aux.adjustTextSize = function(textObject, limit)

@@ -29,7 +29,7 @@ function scene:create( event )
     local spaceBetweenSections =10*(SCREEN_H/480)
 
 
-    local lbTitle = display.newText{parent=sceneGroup, text="...and create account so you can always have your data with you", x=_G.CENTER_X, y=SCREEN_H*0.06, font=_G.FONTS.regular, fontSize=20, width=_G.SCREEN_W*.94, align="center" }
+    local lbTitle = display.newText{parent=sceneGroup, text="Enter your login information:", x=_G.CENTER_X, y=SCREEN_H*0.06, font=_G.FONTS.regular, fontSize=20, width=_G.SCREEN_W*.94, align="center" }
     lbTitle:setTextColor(unpack(_G.COLORS.white))
     lbTitle.anchorY = 0
     local bottom = lbTitle.y + lbTitle.contentHeight
@@ -41,7 +41,6 @@ function scene:create( event )
     local inputsData = {
         {label="E-mail"},
         {label="Password", isSecure=true},
-        {label="Full Name"},
     }
 
 
@@ -62,22 +61,12 @@ function scene:create( event )
 
 
 
-    local checkRequiredFields = function(email, name, password)
+    local checkRequiredFields = function(email, password)
         local result, errorCode = _G.AUX.validateString(email, "email", 4)
         if result == false then
             local msg = "Please enter your email"
             if errorCode > 1 then
                 msg = "Email used is invalid"
-            end
-            _G.AUX.showAlert(msg)
-            return false
-        end
-
-        local result, errorCode = _G.AUX.validateString(name, "name", 2)
-        if result == false then
-            local msg = "Please enter your name"
-            if errorCode > 1 then
-                msg = "Name used is invalid"
             end
             _G.AUX.showAlert(msg)
             return false
@@ -97,26 +86,30 @@ function scene:create( event )
     end
 
 
-    local btRegisterHandler = function()
+    local btLoginHandler = function()
 
         -- checking inputs
         local email = inputs["E-mail"]:getText()
         local password = inputs["Password"]:getText()
-        local name = inputs["Full Name"]:getText()
         print(email, name, password)
 
-        if checkRequiredFields(email, name, password) == false then
+        if checkRequiredFields(email, password) == false then
             return
         end
         native.setActivityIndicator( true )
-        SERVER.register(name, email, password, age, gender,
+        SERVER.login(email, password,
             function()
 
-                SERVER.addWeight(weight)
-                native.setActivityIndicator( false )
-                TABBAR.show(true)
-                composer.gotoScene( "scene-summary", {effect="slideLeft", time=400})
-
+                SERVER.getHistoricalData(
+                    function()
+                        native.setActivityIndicator( false )
+                        TABBAR.show(true)
+                        composer.gotoScene( "scene-summary", {effect="slideLeft", time=400})
+                    end,
+                    function(errorMsg)
+                        native.setActivityIndicator( false )
+                        _G.AUX.showAlert(errorMsg)
+                    end)
             end,
             function(errorMsg)
                 native.setActivityIndicator( false )
@@ -126,13 +119,13 @@ function scene:create( event )
     end
 
 
-    local btRegisterTop = math.max(bottom + 10, SCREEN_H*0.8)
-    local btRegister = CW.newGreenButton{
+    local btLoginTop = math.max(bottom + 10, SCREEN_H*0.8)
+    local btLogin = CW.newGreenButton{
         parent = sceneGroup,
         x = CENTER_X,
-        top = btRegisterTop,
-        label = "register",
-        onRelease = btRegisterHandler
+        top = btLoginTop,
+        label = "login",
+        onRelease = btLoginHandler
     }
 
 

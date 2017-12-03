@@ -13,6 +13,7 @@ local rb = {}
 -- creates newSwitch - v1 ()
 rb.new = function(options)
 
+
     -- creates off/on switch
     local parent = options.parent
     local onSwitchTap = options.onSwitchTap
