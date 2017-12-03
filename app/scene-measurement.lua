@@ -10,6 +10,7 @@ function scene:create( event )
     local background = display.newRect(sceneGroup, CENTER_X, CENTER_Y, SCREEN_W, SCREEN_H)
     background.fill = _G.COLORS.gray
 
+
     ------------------------------------------------------------------
     -- top bar
 
@@ -40,6 +41,8 @@ function scene:create( event )
     local dataInDisplay = {}
 
 
+    local dataWeight = _G.STORAGE.getWeightData()
+
     sceneGroup.showMeasurementField = function(id)
 
         local obj = _G.STORAGE.getMeasurementFromId(id)
@@ -56,8 +59,10 @@ function scene:create( event )
             left =  inputLeft,
             y = lb.y,
             isHalfHalfWidth = true,
+            useFakeLabel = false,
         })
         group:insert(input)
+
 
         local txtUnit = _G.STORAGE.getUnitForMeasurementId(id)
         local lbUnit = display.newText{parent=group, text=txtUnit, x=input.x + input.contentWidth*.5 + 4, y=input.y, font=_G.FONTS.regular, fontSize=20 }
@@ -133,10 +138,24 @@ function scene:create( event )
         sceneGroup.currDateString = newDateString
 
         topBar:setTitle(CALENDAR.getDateForTopBarFromDateString(newDateString))
+        print("dataWeight[newDateString] =", dataWeight[newDateString] and dataWeight[newDateString].weight)
+        if dataWeight[newDateString] then
+            dataInDisplay[1]:setText(dataWeight[newDateString].weight)
+            btAdd:setLabel("save")
+        else
+            btAdd:setLabel("add")
+            dataInDisplay[1]:setText("")
+        end
+
     end
 
 
     sceneGroup.currDateString = CALENDAR.getTodayDateString()
+
+    if dataWeight[sceneGroup.currDateString] then
+        dataInDisplay[1]:setText(dataWeight[sceneGroup.currDateString].weight)
+        btAdd:setLabel("save")
+    end
 
 end
 

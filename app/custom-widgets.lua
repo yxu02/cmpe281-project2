@@ -330,6 +330,7 @@ cw.newTextField = function(options)
         autocapitalizationType = options.autocapitalizationType,
 
         onRelease = options.onRelease,
+        useFakeLabel = options.useFakeLabel,
 
         align = "left",
 
