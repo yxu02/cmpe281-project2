@@ -1,7 +1,7 @@
-<?
+<?php
 // Include the SDK using the Composer autoloader
-require 'aws.phar';
-require 'aws_keys.php';
+//require 'aws.phar';
+//require 'aws_keys.php';
 require 'dbconf.php';
 include 'util.php';
 
@@ -16,12 +16,19 @@ if (isset($_POST['food_name'])) {
 }
 
 /**
-Returns all foods with the string $foodname in them 
+Returns all foods with the string $foodname in them
 @param: foodname - Part or Full food name
 @return: result set as JSON
 */
 function searchFood($foodname) {
 	require 'dbconf.php';
+
+	//let's first check if we have that search result on REDIS
+	$cachedData = getFromRedis($foodname);
+	if ($cachedData) {
+		return returnJSON($cachedData);
+	}
+
 
 	//connect to server and select DB
 	$mysqli = new mysqli($dbhost, $dbusername, $dbpassword, $db_name);
@@ -36,11 +43,16 @@ function searchFood($foodname) {
     if ($res->num_rows > 0) {
 		while ($row = $res->fetch_assoc()) {
 			$entry=[];
-			$entry["food_name"] = $row["food_name"];
+			$entry["name"] = $row["food_name"];
+			$entry["id"] = $row["id"];
 			$result[] = $entry;
 		}
 	}
 
+	// saving the search result on REDIS
+	saveInRedis($foodname, $result);
+
 	//return as a json
 	return returnJSON($result);
 }
+?>
