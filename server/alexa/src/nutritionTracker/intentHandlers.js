@@ -18,14 +18,13 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
       intent.slots.Count.value > 0 && intent.slots.CountUnit.value !== undefined) {
 
       var food = intent.slots.Food.value,
-        count = intent.slots.Count.value;
+        count1 = calculateQuantity(intent);
 
-      var unit = calculateUnit(intent);
       var data = {
         food: food,
-        count: count,
-        unit: unit,
-        food_id: ''
+        count: count1,
+        food_id: '',
+        user_id: ''
       };
 
       storage.saveFood(session, data, response);
@@ -33,6 +32,30 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     } else {
       var speechOutput = "You have to specify quantity, unit and food name. " +
         "For example, you can say, three ounces bananas. Please try again.";
+      var reprompt = "Please say your input."
+      response.ask(speechOutput, reprompt);
+    }
+  };
+
+  intentHandlers.NewBodyIntent = function (intent, session, response) {
+    if (!isNaN(intent.slots.weight.value) && !isNaN(intent.slots.fat.value) &&
+      !isNaN(intent.slots.water.value)) {
+
+      var weight = intent.slots.weight.value,
+        fat = intent.slots.fat.value * 453.592,
+        water = intent.slots.water.value * 453.592;
+
+      var data = {
+        weight: weight,
+        fat: fat,
+        water: water
+      };
+
+      storage.saveBody(session, data, response);
+
+    } else {
+      var speechOutput = "You have to specify weight, body fat, and body water. " +
+        "For example, you can say, my weight is X pounds, my body fat is Y pounds, my body water is Z pounds.";
       var reprompt = "Please say your input."
       response.ask(speechOutput, reprompt);
     }
@@ -67,42 +90,34 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
 
 };
 
-var calculateUnit = function (intent) {
+var calculateQuantity = function (intent) {
 
-  var count = intent.slots.Count.value;
-  if (count === 0) {
-    return null;
-  }
+  var count = intent.slots.Count.value, count_in_gram,
+      unit = intent.slots.CountUnit.value;
 
-  var unit;
-  if (intent.slots.CountUnit.value !== undefined) {
-    switch (intent.slots.CountUnit.value) {
+    switch (unit) {
       case 'ounce':
       case 'ounces':
       case 'Oz':
       case 'oz':
-        unit = 'oz';
+        count_in_gram = 28.3495 * count;
         break;
-      case 'g':
-      case 'gs':
-      case 'gram':
-      case 'grams':
-        unit = 'gm';
+      case 'lb':
+      case 'lbs':
+      case 'pound':
+      case 'pounds':
+        count_in_gram = 453.592 * count;
         break;
-      case 'ml':
-      case 'milliliter':
-      case 'milliliters':
-        unit = 'ml';
+      case 'liter':
+      case 'liters':
+        count_in_gram = 1000.000 * count;
         break;
       default:
-        unit = 'gm';
+        count_in_gram = count;
         break;
     }
-  } else {
-    unit = 'gm';
-  }
 
-  return unit;
+  return count_in_gram;
 }
 
 exports.register = registerIntentHandlers;
