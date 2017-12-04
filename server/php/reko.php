@@ -6,6 +6,8 @@ require 'aws.phar';
 
 require 'functions.php';
 
+checkAuthorization(true);
+
 
 
 // Checking and validating params

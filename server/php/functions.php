@@ -63,6 +63,7 @@ function login($email, $password) {
     	$tokenInfo['email'] = $row['email'];
     	$tokenInfo['age'] = $row['age'];
     	$tokenInfo['gender'] = $row['gender'];
+    	$tokenInfo['avatarFilename'] =  $row['avatarFilename'];
 
     	return $tokenInfo;
     }
@@ -94,10 +95,33 @@ function register($email, $password, $name, $age, $gender){
 	return $result;
 }
 
+function addAvatarFilenameToDatabase($userId, $avatarFilename) {
+	global $mysqli;
+
+    $res = doQueryInDatabase("UPDATE users281 SET avatar_filename = '$avatarFilename' WHERE id = '$userId'");
+
+	return $res;
+}
+
+function getAvatarFilename($userId) {
+	global $mysqli;
+    $email = mysqli_real_escape_string($mysqli, $userId);
+    $res = doQueryInDatabase("SELECT avatar_filename FROM users281 WHERE id = '$userId' LIMIT 1");
+    if ($res->num_rows == 0)
+        return null;
+
+    $row = $res->fetch_assoc();
+    if (isset($row["avatar_filename"])) {
+    	return $row["avatar_filename"];
+    }
+
+    return null;
+}
+
 function getUserObjFromEmail($email) {
 	global $mysqli;
     $email = mysqli_real_escape_string($mysqli, $email);
-    $res = doQueryInDatabase("SELECT id, name, email, age, gender FROM users281 WHERE email = '$email' LIMIT 1");
+    $res = doQueryInDatabase("SELECT id, name, email, age, gender, avatar_filename FROM users281 WHERE email = '$email' LIMIT 1");
     if ($res->num_rows == 0)
         return null;
 
@@ -110,7 +134,7 @@ function getUserObjFromToken($token) {
 	global $mysqli;
     $token = mysqli_real_escape_string($mysqli, $token);
 
-    $res = doQueryInDatabase("SELECT id, name, email, age, gender, token FROM users281 WHERE token = '$token' LIMIT 1");
+    $res = doQueryInDatabase("SELECT id, name, email, age, gender, token, avatarFilename FROM users281 WHERE token = '$token' LIMIT 1");
 
     if ($res->num_rows == 0)
         return null;
