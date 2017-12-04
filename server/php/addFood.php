@@ -37,7 +37,7 @@ function enterFood($userid, $foodName, $mealId, $count, $unit, $date) {
 	    dbError($mysqli->error);
 	}
 
-	$foodid = '';
+	$foodid = null;
 
 	// Instead of Food name take nutrition.id as input
 	$nquery = "SELECT nutrition.id FROM nutrition where food_name = '$foodName'";
@@ -47,9 +47,18 @@ function enterFood($userid, $foodName, $mealId, $count, $unit, $date) {
 				$foodid=$row[0]; // get foodname here.
 		}
 	} else {
+
 		// also try to query USDA DB to find the fooditem if not found in nutrition table
 		// can make an entry into nutrition table
 		// and then enter into user_foods table
+	}
+
+
+	if ($foodid == null) {
+		$r = [];
+		$r['errorCode'] = "food";
+		$r['errorMessage'] = "Product invalid or not registered in our database";
+		returnJSON($r);
 	}
 
 	$ufquery = "INSERT INTO `user_foods`(`user_id`,`food_id`,`food_name`,`meal_id`,`count`,`unit`,`created_at`, `date`)
