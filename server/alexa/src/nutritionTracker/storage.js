@@ -1,6 +1,8 @@
 /**
  * @Author: Yu Xu <yu.xu@sjsu.edu>
  * 
+ * Contributor: Lin Cheng <lin.cheng@sjsu.edu>
+ *
  * This file contains Db storage and management logic for all indents.
  */
 
@@ -74,6 +76,42 @@ var storage = (function () {
     }
   };
 
+  function Body(session, data) {
+    if (data) {
+      this.data = data;
+    } else {
+      this.data = {
+        weight: null,
+        fat: null,
+        water: null
+      };
+    }
+    this._session = session;
+  }
+
+  Body.prototype = {
+
+    save: function (response) {
+
+        var query = 'REPLACE INTO body_data(amazon_user_id,weight,p_body_fat,p_body_water)' +
+        'VALUES (' + connection.escape(this._session.user.userId.split('.')[3]) + ', ' +
+        this.data.weight + ', ' + this.data.fat + ', ' +
+      this.data.water + ')';
+
+      connection.query(query, (function (data) {
+        return function (err, rows) {
+          if (err) {
+            console.log(err);
+            return;
+          }
+
+          var speechOutput = 'Data added.';
+          response.tell(speechOutput);
+        };
+      })(this.data));
+    }
+  };
+  
   return {
     /**
      * Validates input for save food action and calls Save method on success
@@ -100,6 +138,11 @@ var storage = (function () {
         }
       });
     },
+    
+    saveBody: function (session, data, response) {
+        var currentBody = new Body(session, data);
+        currentBody.save(response);
+    }
   };
 
 })();
