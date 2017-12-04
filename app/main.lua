@@ -47,6 +47,7 @@ _G.RBW = require("rb-libs.rb-widget")
 _G.FRAMES = require("custom-frames")
 _G.STORAGE = require("module-storage")
 _G.CALENDAR = require("module-calendar")
+_G.CONVERTER = require("module-converter")
 
 require("rb-libs.rb-string")
 
@@ -67,9 +68,18 @@ timer.performWithDelay(10, function()
     composer.recycleOnSceneChange = true
 
     if _G.USER.id then
-        _G.SERVER.getHistoricalData()
-        composer.gotoScene("scene-summary")
-        _G.TABBAR.show(true)
+        native.setActivityIndicator( true )
+        _G.SERVER.getHistoricalData(function()
+            native.setActivityIndicator( false )
+            composer.gotoScene("scene-summary")
+            _G.TABBAR.show(true)
+        end,
+        function()
+            native.setActivityIndicator( false )
+            composer.gotoScene("scene-summary")
+            _G.TABBAR.show(true)
+        end)
+
     else
         composer.gotoScene("scene-welcome")
     end

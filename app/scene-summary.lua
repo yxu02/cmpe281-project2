@@ -41,8 +41,9 @@ function scene:create( event )
 
          local entry = {}
          entry.key = _G.CALENDAR.getMonthDayFromDateString(dateString)
-         entry.values = {v.weight}
+         entry.values = {v.weight/1000}  -- we divide by 1000 to convert the Grams to Kg and don't end up with a huge bar
          entry.valuesColors = {_G.COLORS.blue}
+         entry.totalLabel = _G.CONVERTER.toImperial(v.weight,"grams")
          entry.dateString = dateString
          maxValue = math.max(maxValue, v.weight)
          chartWeightData[#chartWeightData+1] = entry
