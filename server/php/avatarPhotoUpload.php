@@ -66,7 +66,7 @@ function awsPutObjectFromFile($filename, $filePath){
 
 	try {
 		$result = $s3Client->putObject([
-		    'Bucket' => "cmpe281-project2",
+		    'Bucket' => "cmpe281-us",
 		    'Key' => $filename,
 		    'SourceFile' => $filePath,
 		]);

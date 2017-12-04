@@ -481,4 +481,57 @@ server.imageReko = function(filename, onSuccess, onFail)
 end
 
 
+server.uploadAvatar = function(filename, onSuccess, onFail)
+
+
+    --local filename = "large.jpg" --"large.jpg"
+
+
+    local path = system.pathForFile( filename, system.DocumentsDirectory )
+    local file = io.open(path, "r")
+    local contents = file:read( "*a" )
+
+    local boundary = "BOUNDARY_APP_"..os.time()  -- can be any random string
+
+    local params = {}
+
+    params["body"] = '--'..boundary..
+            '\r\nContent-Disposition: form-data; name=fileObject; filename='..filename..
+            '\r\nContent-type: image/jpg'..
+            '\r\n\r\n'..contents..
+            '\r\n--'..boundary..
+            '\r\nContent-Disposition: form-data; name=userid'..
+            '\r\n\r\n'.._G.USER.id..
+            '\r\n--'..boundary..
+            '\r\nContent-Disposition: form-data; name=apiKey'..
+            '\r\n\r\n'..apiKey..
+            '\r\n--'..boundary..'--\r\n';
+
+
+    params["boundary"] = boundary
+
+
+    native.setActivityIndicator( true )
+    getJSON("avatarPhotoUpload.php", params, function(data)
+                native.setActivityIndicator( false )
+                local success = data.errorCode == nil
+                --print("sucess=", success)
+                if success then
+                    _G.USER.saveAvatarFilename(data.avatarFilename);
+                    if onSuccess then
+                        onSuccess(dataFormatted)
+                    end
+                else
+                    if onFail then
+                        onFail(data.errorMessage, data.errorCode)
+                    end
+                end
+
+            end, "MULTIPART")
+
+
+end
+
+
+
 return server
