@@ -134,7 +134,7 @@ function getUserObjFromToken($token) {
 	global $mysqli;
     $token = mysqli_real_escape_string($mysqli, $token);
 
-    $res = doQueryInDatabase("SELECT id, name, email, age, gender, token, avatarFilename FROM users281 WHERE token = '$token' LIMIT 1");
+    $res = doQueryInDatabase("SELECT id, name, email, age, gender, token, avatar_filename FROM users281 WHERE token = '$token' LIMIT 1");
 
     if ($res->num_rows == 0)
         return null;
