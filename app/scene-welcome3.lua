@@ -42,7 +42,7 @@ function scene:create( event )
     local incrementalWeight = 0.1
     local dataWeightImperial = {}
     for i=minWeight,maxWeight,incrementalWeight do
-        dataWeightImperial[#dataWeightImperial+1] = {name=i}
+        dataWeightImperial[#dataWeightImperial+1] = {name=AUX.formatDecimal(i,1)}
     end
 
     local sliderButtonWeight = _G.RBW.newSliderButton({
@@ -53,7 +53,7 @@ function scene:create( event )
             print("onSliderButton=",e.target.name)
             --local catID = e.target.Id
         end,
-        initialIndex = 13,
+        initialIndex = 991,
     })
     sceneGroup:insert(sliderButtonWeight)
     bottom = sliderButtonWeight.y + sliderButtonWeight.contentHeight

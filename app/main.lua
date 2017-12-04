@@ -8,11 +8,11 @@
 display.setDefault( "background", 1,1,1 )
 
 -- defyning the status bar type
-display.setStatusBar( display.DefaultStatusBar )
+display.setStatusBar( display.DarkStatusBar )
 
 -- definying globals
 _G.STATUS_BAR_H = display.topStatusBarContentHeight + 2
-_G.TOP_Y_AFTER_STATUS_BAR = display.topStatusBarContentHeight + 2
+_G.TOP_Y_AFTER_STATUS_BAR = display.topStatusBarContentHeight
 
 _G.CENTER_X = display.contentCenterX
 _G.CENTER_Y = display.contentCenterY

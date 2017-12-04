@@ -405,7 +405,7 @@ server.addWeight = function(weight, dateString, measurementId, onSuccess, onFail
                     -- USER.level = data.level
                     -- USER.balance = tonumber(data.balance)
                     -- USER.saveToken(data.token)
-                    _G.STORAGE.appendWeight(weight, dateString)
+                    _G.STORAGE.appendWeight(weight, _G.CALENDAR.getTodayDateString())
                     if onSuccess then
                         onSuccess(data)
                     end

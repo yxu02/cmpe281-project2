@@ -49,7 +49,7 @@ ragdogLib.applyMaskFromPolygon = function(object, polygon, maskName)
   -- print(maskGroup.contentWidth/display.contentScaleY)
 
   --display.save(maskGroup, maskName or "mask.jpg");
-  maskGroup:scale(display.contentScaleX*2, display.contentScaleY*2)
+  --maskGroup:scale(display.contentScaleX*2, display.contentScaleY*2)
   display.save(maskGroup, {filename= maskName or "mask.jpg", baseDir=system.DocumentsDirectory, captureOffscreenArea=true, jpegQuality=1});
 
   maskGroup:removeSelf();

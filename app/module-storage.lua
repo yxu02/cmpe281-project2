@@ -125,7 +125,7 @@ storage.setWeightData = function(data)
 	rbStorage.set("weight", data)
 end
 storage.appendWeight = function(weight, dateString)
-	local data = storage.getWeightData()
+	local data = storage.getWeightData() or {}
 	local newEntry = {}
 	newEntry.weight = weight
 	newEntry.measuredAt = dateString

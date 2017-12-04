@@ -57,7 +57,7 @@ local new = function(tabBarOptions)
 
     -- background
 
-    local background = display.newRect(0,0,SCREEN_W, 50)
+    local background = display.newRect(0,0,SCREEN_W, 60)
     background.fill = colorBackground
     tabBar:insert(background)
     background.x = background.contentWidth*0.5
