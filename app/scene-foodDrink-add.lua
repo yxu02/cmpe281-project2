@@ -10,7 +10,7 @@ function scene:create( event )
 
     local mealId = event.params and event.params.mealId
     local dateString = event.params and event.params.dateString
-
+    local onClose = event.params and event.params.onClose
 
     local background = display.newRect(sceneGroup, CENTER_X, CENTER_Y, SCREEN_W, SCREEN_H)
     background.fill = _G.COLORS.darkBlue
@@ -18,6 +18,9 @@ function scene:create( event )
 
     local closeScreen = function()
         composer.hideOverlay( "slideDown", 400 ); TABBAR.show(true)
+        if onClose then
+            onClose()
+        end
     end
 
     ------------------------------------------------------------------
@@ -78,13 +81,23 @@ function scene:create( event )
     }
     sceneGroup:insert(btSearch)
 
+
+
+
+
     local btCameraRelease = function()
 
         print("on btCameraRelease")
 
         local function onComplete( event )
            local photo = event.target
-           print( "photo w,h = " .. photo.width .. "," .. photo.height )
+
+           if photo then
+                local filename = "tempImage.jpg"
+                display.save(photo, { filename=filename, baseDir=system.TemporaryDirectory, isFullResolution=true, backgroundColor={0,0,0,0} })
+                display.remove(photo)
+                sceneGroup.searchProductViaImage(filename)
+            end
 
         end
 
@@ -140,7 +153,6 @@ function scene:create( event )
         end,
         onTap = function() print("tapped"); return true end
     }
-    btCamera.isVisible = false
     sceneGroup:insert(btCamera)
 
     ------------------------------------------------------------------
@@ -246,6 +258,19 @@ function scene:create( event )
     end
 
 
+    sceneGroup.searchProductViaImage = function(filename)
+
+       _G.SERVER.imageReko(filename,
+            function(data)
+                native.setActivityIndicator( false )
+                updateTableViewData(data)
+            end,
+            function()
+                native.setActivityIndicator( false )
+                _G.AUX.showAlert("Failed to search product using AWS Rekognition. Please try again later.")
+         end)
+    end
+
 
     sceneGroup.showPopup = function(productObj)
 
@@ -334,6 +359,13 @@ function scene:create( event )
 
             local servingQty = inputServingQty:getText()
             local servingSize = sliderButtonServingSize:getSelected()
+
+
+            if servingSize == "oz" then
+                servingQty = _G.CONVERTER.toMetric(servingQty, "oz")
+                servingSize = "grams"
+            end
+
 
             _G.SERVER.addFood(productObj.name, servingQty, servingSize, mealId, dateString,
                 function(data)

@@ -1,6 +1,8 @@
 /**
  * @Author: Yu Xu <yu.xu@sjsu.edu>
  * 
+ * Contributor: Lin Cheng <lin.cheng@sjsu.edu>
+ *
  * This file contains handler logic for all indents.
  */
 
@@ -32,6 +34,30 @@ var registerIntentHandlers = function (intentHandlers, skillContext) {
     } else {
       var speechOutput = "You have to specify quantity, unit and food name. " +
         "For example, you can say, three ounces bananas. Please try again.";
+      var reprompt = "Please say your input."
+      response.ask(speechOutput, reprompt);
+    }
+  };
+  
+  intentHandlers.NewBodyIntent = function (intent, session, response) {
+    if (!isNaN(intent.slots.weight.value) && !isNaN(intent.slots.fat.value) &&
+      !isNaN(intent.slots.water.value)) {
+
+      var weight = intent.slots.weight.value,
+        fat = intent.slots.fat.value,
+        water = intent.slots.water.value;
+
+      var data = {
+        weight: weight,
+        fat: fat,
+        water: water
+      };
+
+      storage.saveBody(session, data, response);
+
+    } else {
+      var speechOutput = "You have to specify weight, water and fat. " +
+        "For example, you can say, blah.";
       var reprompt = "Please say your input."
       response.ask(speechOutput, reprompt);
     }

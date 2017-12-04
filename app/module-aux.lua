@@ -1,4 +1,8 @@
 local aux = {}
+function round2(num, numDecimalPlaces) -- source: http://lua-users.org/wiki/SimpleRound
+  return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
+end
+
 function comma_value(amount) -- source: http://lua-users.org/wiki/FormattingNumbers
   local formatted = amount
   while true do
@@ -10,7 +14,8 @@ function comma_value(amount) -- source: http://lua-users.org/wiki/FormattingNumb
   return formatted
 end
 
-aux.formatDecimal = function(number)
+aux.formatDecimal = function(number, numDecimalPlaces)
+    number = round2(number, numDecimalPlaces or 1)
     return comma_value(number)
 end
 
@@ -40,7 +45,7 @@ end
 
 aux.showLoadingAnimation = function(x,y,size)
 
-    local icon = display.newImageRect("images/aux/ic_loading.png", 80, 80)
+    local icon = display.newImageRect("images/icons/ic_loading.png", 80, 80)
     if size then
         icon:scale(size/icon.contentWidth, size/icon.contentHeight)
     end

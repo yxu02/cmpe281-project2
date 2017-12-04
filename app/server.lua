@@ -43,7 +43,7 @@ local function getJSON(endpoint, parameters, onCompleteDownload, method, onProgr
     parameters = parameters or {}
     parameters.userid = _G.USER.id
     parameters.apiKey = apiKey
-print("_G.USER.id=", _G.USER.id)
+
 
     local function showDownloadErroAlert()
         native.setActivityIndicator( false )
@@ -194,7 +194,7 @@ server.register = function(name, email, password, age, gender, onSuccess, onFail
                 local success = data.errorCode == nil
                 print("sucess=", success)
                 if success then
-                    jp(data)
+                    --jp(data)
                     -- storing the user info
                     --USER.setToken(data.token)
                     USER.new(data.id, name, email, age, gender)
@@ -383,10 +383,11 @@ server.addFood = function(productName, servingQty, servingSize, mealId, dateStri
 
 end
 
-server.addWeight = function(weight, dateString, onSuccess, onFail)
+server.addWeight = function(weight, dateString, measurementId, onSuccess, onFail)
     local params = {}
     params.weight = weight
     params.dateMeasured = dateString or _G.CALENDAR.getTodayDateString()
+    params.measurementId = measurementId
 
 
     -- onSuccess({
@@ -421,48 +422,15 @@ server.addWeight = function(weight, dateString, onSuccess, onFail)
 
 end
 
--- server.uploadObject = function(filename, description, isUpdate, useTransferAcceleration, onSuccess, onFail)
-
---     local params = {}
---     params["filename"] = filename
---     params["description"] = description
---     params["isUpdate"] = isUpdate
---     params["useTransferAcceleration"] = useTransferAcceleration
 
 
-
---     getJSON("upload.php",
---             params,
---             function(data)
---                 local success = data.errorCode == nil
---                 print("sucess=", success)
---                 if success then
---                     if onSuccess then
---                         onSuccess(data)
---                     end
---                 else
---                     if onFail then
---                         onFail(data.errorMessage, data.errorCode)
---                     end
---                 end
-
---             end,
---             "POST",  -- method
---             nil,     -- onProgress
---             true)    -- silentRequest
-
--- end
-
-
-server.upload = function(filename, description, isUpdate, useTransferAcceleration, onSuccess, onFail)
+server.imageReko = function(filename, onSuccess, onFail)
 
 
     --local filename = "large.jpg" --"large.jpg"
 
-    if isUpdate then isUpdate = 1 else isUpdate = 0 end
-    if useTransferAcceleration then useTransferAcceleration = 1 else useTransferAcceleration = 0 end
 
-    local path = system.pathForFile( filename, system.DocumentsDirectory )
+    local path = system.pathForFile( filename, system.TemporaryDirectory )
     local file = io.open(path, "r")
     local contents = file:read( "*a" )
 
@@ -475,23 +443,8 @@ server.upload = function(filename, description, isUpdate, useTransferAcceleratio
             '\r\nContent-type: image/jpg'..
             '\r\n\r\n'..contents..
             '\r\n--'..boundary..
-            '\r\nContent-Disposition: form-data; name=filename'..
-            '\r\n\r\n'..filename..
-            '\r\n--'..boundary..
-            '\r\nContent-Disposition: form-data; name=token'..
-            '\r\n\r\n'.._G.USER.token..
-            '\r\n--'..boundary..
-            '\r\nContent-Disposition: form-data; name=isUpdate'..
-            '\r\n\r\n'..isUpdate..
-            '\r\n--'..boundary..
-            '\r\nContent-Disposition: form-data; name=useTransferAcceleration'..
-            '\r\n\r\n'..useTransferAcceleration..
-            '\r\n--'..boundary..
             '\r\nContent-Disposition: form-data; name=apiKey'..
             '\r\n\r\n'..apiKey..
-            '\r\n--'..boundary..
-            '\r\nContent-Disposition: form-data; name=description'..
-            '\r\n\r\n'..description..
             '\r\n--'..boundary..'--\r\n';
 
 
@@ -499,18 +452,22 @@ server.upload = function(filename, description, isUpdate, useTransferAcceleratio
 
 
     native.setActivityIndicator( true )
-    getJSON("upload.php", params, function(data)
+    getJSON("reko.php", params, function(data)
                 native.setActivityIndicator( false )
                 local success = data.errorCode == nil
-                print("sucess=", success)
+                --print("sucess=", success)
                 if success then
-                    -- storing the user info
-                    -- USER.id = data.id
-                    -- USER.level = data.level
-                    -- USER.balance = tonumber(data.balance)
-                    -- USER.saveToken(data.token)
+
+                    local dataFormatted = {}
+                    for k,v in ipairs(data) do
+                        if v.Name then
+                            dataFormatted[#dataFormatted+1] = {
+                                name = v.Name
+                            }
+                        end
+                    end
                     if onSuccess then
-                        onSuccess(data)
+                        onSuccess(dataFormatted)
                     end
                 else
                     if onFail then

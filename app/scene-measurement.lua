@@ -97,7 +97,12 @@ function scene:create( event )
         local weight = dataInDisplay[1]:getText()
         print("weight=", weight)
 
-        _G.SERVER.addWeight(weight, sceneGroup.currDateString,
+        local measurementId = nil
+        if dataWeight[sceneGroup.currDateString] then
+            measurementId = dataWeight[sceneGroup.currDateString].id
+        end
+        local weightInGrams = _G.CONVERTER.toMetric(weight, "lbs")
+        _G.SERVER.addWeight(weightInGrams, sceneGroup.currDateString, measurementId,
             function(data)
                 native.setActivityIndicator( false )
                 timer.performWithDelay(100, function()
@@ -140,7 +145,8 @@ function scene:create( event )
         topBar:setTitle(CALENDAR.getDateForTopBarFromDateString(newDateString))
         print("dataWeight[newDateString] =", dataWeight[newDateString] and dataWeight[newDateString].weight)
         if dataWeight[newDateString] then
-            dataInDisplay[1]:setText(dataWeight[newDateString].weight)
+            local value = _G.CONVERTER.toImperial(dataWeight[newDateString].weight,"grams")
+            dataInDisplay[1]:setText(value)
             btAdd:setLabel("save")
         else
             btAdd:setLabel("add")
@@ -153,7 +159,9 @@ function scene:create( event )
     sceneGroup.currDateString = CALENDAR.getTodayDateString()
 
     if dataWeight[sceneGroup.currDateString] then
-        dataInDisplay[1]:setText(dataWeight[sceneGroup.currDateString].weight)
+        --dataInDisplay[1]:setText(dataWeight[sceneGroup.currDateString].weight)
+        local value = _G.CONVERTER.toImperial(dataWeight[sceneGroup.currDateString].weight,"grams")
+        dataInDisplay[1]:setText(value)
         btAdd:setLabel("save")
     end
 
