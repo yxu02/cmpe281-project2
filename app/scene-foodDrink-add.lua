@@ -10,7 +10,7 @@ function scene:create( event )
 
     local mealId = event.params and event.params.mealId
     local dateString = event.params and event.params.dateString
-
+    local onClose = event.params and event.params.onClose
 
     local background = display.newRect(sceneGroup, CENTER_X, CENTER_Y, SCREEN_W, SCREEN_H)
     background.fill = _G.COLORS.darkBlue
@@ -18,6 +18,9 @@ function scene:create( event )
 
     local closeScreen = function()
         composer.hideOverlay( "slideDown", 400 ); TABBAR.show(true)
+        if onClose then
+            onClose()
+        end
     end
 
     ------------------------------------------------------------------

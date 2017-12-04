@@ -194,7 +194,7 @@ server.register = function(name, email, password, age, gender, onSuccess, onFail
                 local success = data.errorCode == nil
                 print("sucess=", success)
                 if success then
-                    jp(data)
+                    --jp(data)
                     -- storing the user info
                     --USER.setToken(data.token)
                     USER.new(data.id, name, email, age, gender)

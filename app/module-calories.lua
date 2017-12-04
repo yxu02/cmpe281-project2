@@ -2,7 +2,7 @@ local mCalories = {}
 
 -- receives a data
 mCalories.getNutrientsBreakdown = function (data) --   data = { {carb=70, fiber=47, protein=35}, {}, {}}
-jp(data)
+
 	local caloriesPerFat = 9
 	local caloriesPerNetCarb = 4  -- Net Carb = Carb - Fiber
 	local caloriesPerProtein = 4

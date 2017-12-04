@@ -84,11 +84,14 @@ function scene:create( event )
 
     for dateString, v in pairs(foodHistoricalData) do
         local _, _, totalCaloriesByNutrient, percentCaloriesByNutrient = require("module-calories").getNutrientsBreakdown(v)
-         local entry = {}
+
+
+        local entry = {}
          entry.key = _G.CALENDAR.getMonthDayFromDateString(dateString)
          entry.values = {percentCaloriesByNutrient.protein, percentCaloriesByNutrient.fat, percentCaloriesByNutrient.netCarb }
          entry.valuesColors = {_G.COLORS.protein, _G.COLORS.fat, _G.COLORS.carb}
-         entry.totalLabel = AUX.formatDecimal(math.round(totalCaloriesByNutrient.total))
+         --entry.totalLabel = AUX.formatDecimal(math.round(totalCaloriesByNutrient.total))
+         entry.totalLabel = AUX.formatDecimal(_G.CONVERTER.toImperial(totalCaloriesByNutrient.total,"grams"))
          entry.valuesLabelSuffix = "%"
          entry.dateString = dateString
 

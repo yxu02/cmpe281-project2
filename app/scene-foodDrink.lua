@@ -33,9 +33,9 @@ function scene:create( event )
 
 
     local getDataForMealId = function(data, mealId)
-        print("Data=")
-        jp(data)
-        print("mealId=", mealId)
+        -- print("Data=")
+        -- jp(data)
+        -- print("mealId=", mealId)
         local d = {}
         for k,v in ipairs(data) do
             if tonumber(v.mealId) == tonumber(mealId) then
@@ -179,7 +179,7 @@ function scene:create( event )
 
         local buttonOnRelease = function(e)
             local id = e.target.id
-            print("id=", id)
+
 
             -- Options table for the overlay scene "pause.lua"
             local options = {
@@ -189,6 +189,7 @@ function scene:create( event )
                 params = {
                     mealId = id,
                     dateString=sceneGroup.currDateString,
+                    onClose=sceneGroup.onCloseOverlay
                 }
             }
             composer.showOverlay( "scene-foodDrink-add", options )
@@ -226,9 +227,11 @@ function scene:create( event )
                 FRAMES.newSection{parent=groupMeal, top = nil, labelLeft="No data"}
             else
                 for k,v in ipairs(dataBreakFast) do
-                    print("V=")
-                    jp(v)
-                    FRAMES.newSection{parent=groupMeal, top = nil, labelLeft=v.foodName, labelMid=v.carb, labelRight=v.calories}
+                    -- print("V=")
+                    -- jp(v)
+                    local carbInImperialUnit = _G.CONVERTER.toImperial(v.carb,"grams")
+                    print("carbInImperialUnit=", carbInImperialUnit, AUX.formatDecimal(carbInImperialUnit, 2))
+                    FRAMES.newSection{parent=groupMeal, top = nil, labelLeft=v.foodName, labelMid=AUX.formatDecimal(carbInImperialUnit, 2), labelRight=AUX.formatDecimal(v.calories)}
                 end
             end
             bottom = groupMeal.y + groupMeal.contentHeight
@@ -271,6 +274,13 @@ function scene:create( event )
 
     sceneGroup.currDateString = CALENDAR.getTodayDateString()
     sceneGroup.showDailyContent(sceneGroup.currDateString , data[sceneGroup.currDateString ])
+
+    sceneGroup.onCloseOverlay = function()
+        print("REFRESH")
+        data = _G.STORAGE.getHistoricalDailyConsumption()
+        sceneGroup.changeDateBy(0)
+    end
+
 
 end
 

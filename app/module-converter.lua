@@ -23,14 +23,14 @@ mConverter.toMetric = function(value, valueUnit)
 end
 
 mConverter.toImperial = function(value, valueUnit)
-	print("mConverter.toImperial-", value, valueUnit)
+	--print("mConverter.toImperial-", value, valueUnit)
 	if valueUnit == "gm" then
 		valueUnit = "grams"
 	end
-	print("dicToImperial[valueUnit]=", dicToImperial[valueUnit])
+	--print("dicToImperial[valueUnit]=", dicToImperial[valueUnit])
 	local convertedValue =  value * (dicToImperial[valueUnit] or 1)
-	print("from ", value, " to ", convertedValue)
-	return AUX.formatDecimal(convertedValue)
+	--print("from ", value, " to ", convertedValue)
+	return AUX.formatDecimal(convertedValue, 4)
 end
 
 

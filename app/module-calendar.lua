@@ -48,7 +48,7 @@ end
 
 mCalendar.getDateForTopBarFromDateString = function(dateString)
 	local date = getDateTableFromDateString(dateString)
-	jp(date)
+
 	return date.day .. " " .. monthNames[date.month]:sub(1,3) .. " " .. tostring(date.year):right(2)
 end
 
