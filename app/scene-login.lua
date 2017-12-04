@@ -59,7 +59,17 @@ function scene:create( event )
         bottom = inputs[v.label].y + inputs[v.label].contentHeight
     end
 
-
+    local btForgotPassword = CW.newTransparentButton{
+        parent = sceneGroup,
+        x = CENTER_X,
+        top = bottom,
+        label = "forgot password?",
+        labelFontSize = 14,
+        onRelease = function()
+            _G.AUX.showAlert("Please contact us at contact@cmpe281.site to recover your password")
+        end
+    }
+    bottom = btForgotPassword.y + btForgotPassword.contentHeight
 
     local checkRequiredFields = function(email, password)
         local result, errorCode = _G.AUX.validateString(email, "email", 4)

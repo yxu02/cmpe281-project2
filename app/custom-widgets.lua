@@ -91,6 +91,7 @@ cw.newTransparentButton = function(options)
     local top = options.top
     local width = options.width
     local label = options.label
+    local labelFontSize = options.labelFontSize or 18
     local onRelease = options.onRelease
 
     local button = rbW.newButton{
@@ -108,7 +109,7 @@ cw.newTransparentButton = function(options)
         backgroundOverColor = _G.COLORS.dqtransparent,
         backgroundDisabledColor = {.3,.3,.3},
         labelFont = _G.FONTS.light,
-        labelFontSize = 18,
+        labelFontSize = labelFontSize,
         scrollViewParent = scrollViewParentFunction,
         onRelease = onRelease,
         onTap = function() print("tapped"); return true end
