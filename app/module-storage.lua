@@ -33,7 +33,7 @@ t["2017-11-27"] = {
 
 storage.getHistoricalDailyConsumption = function()
 	--return t
-	return rbStorage.get("food")
+	return rbStorage.get("food") or {}
 end
 
 storage.setFoodData = function(data)
@@ -119,7 +119,7 @@ end
 
 
 storage.getWeightData = function()
-	return rbStorage.get("weight")
+	return rbStorage.get("weight") or {}
 end
 storage.setWeightData = function(data)
 	rbStorage.set("weight", data)
