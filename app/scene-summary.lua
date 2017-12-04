@@ -43,7 +43,7 @@ function scene:create( event )
          entry.key = _G.CALENDAR.getMonthDayFromDateString(dateString)
          entry.values = {v.weight/1000}  -- we divide by 1000 to convert the Grams to Kg and don't end up with a huge bar
          entry.valuesColors = {_G.COLORS.blue}
-         entry.totalLabel = _G.CONVERTER.toImperial(v.weight,"grams")
+         entry.totalLabel = AUX.formatDecimal(_G.CONVERTER.toImperial(v.weight,"grams"),1)
          entry.dateString = dateString
          maxValue = math.max(maxValue, v.weight)
          chartWeightData[#chartWeightData+1] = entry
@@ -91,7 +91,7 @@ function scene:create( event )
          entry.values = {percentCaloriesByNutrient.protein, percentCaloriesByNutrient.fat, percentCaloriesByNutrient.netCarb }
          entry.valuesColors = {_G.COLORS.protein, _G.COLORS.fat, _G.COLORS.carb}
          --entry.totalLabel = AUX.formatDecimal(math.round(totalCaloriesByNutrient.total))
-         entry.totalLabel = AUX.formatDecimal(_G.CONVERTER.toImperial(totalCaloriesByNutrient.total,"grams"))
+         entry.totalLabel = AUX.formatDecimal(_G.CONVERTER.toImperial(totalCaloriesByNutrient.total,"grams"), 2)
          entry.valuesLabelSuffix = "%"
          entry.dateString = dateString
 

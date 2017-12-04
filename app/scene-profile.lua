@@ -42,7 +42,7 @@ function scene:create( event )
     local photoTop = 0
     print("USER.avatarFilename=", USER.avatarFilename, USER.id)
     if _G.USER.avatarFilename then
-        local url = "https://www.cmpe281.site/" .. USER.avatarFilename;
+        local url = "http://www.cmpe281.site/" .. USER.avatarFilename;
         photo = display.loadImageFromInternet{
 
             imageURL=url,

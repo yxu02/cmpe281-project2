@@ -160,7 +160,7 @@ function scene:create( event )
 
     if dataWeight[sceneGroup.currDateString] then
         --dataInDisplay[1]:setText(dataWeight[sceneGroup.currDateString].weight)
-        local value = _G.CONVERTER.toImperial(dataWeight[sceneGroup.currDateString].weight,"grams")
+        local value = AUX.formatDecimal(_G.CONVERTER.toImperial(dataWeight[sceneGroup.currDateString].weight,"grams"),1)
         dataInDisplay[1]:setText(value)
         btAdd:setLabel("save")
     end
